@@ -2,9 +2,9 @@ name: React-Deploy
 
 on:
   push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+    branches: [ master ]
+  # pull_request:
+  #   branches: [ develop ]
 
 jobs:
   build:
@@ -22,6 +22,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          **/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
