@@ -16,7 +16,7 @@ jobs:
         node-version: [ 12.x ]
 
     env:
-      CI_FIREBASE_MESSAGE: ${{ github.event.head_commit.message }} - ${{ github.event.head_commit.url }}/checks
+      CI_FIREBASE_MESSAGE: ${{ github.event.head_commit.message }}
 
     steps:
     - uses: actions/checkout@v2
@@ -39,14 +39,14 @@ jobs:
       
     - name: Install dependencies
       run: npm install      
-    # - name: Install firebase-tools
-    #   run: npm install -D firebase-tools
+    - name: Install firebase-tools
+      run: npm install -g firebase-tools
 
     - name: Build
       run: npm run build
 
     - name: Firebase deploy
-      run: npm run firebase-deploy ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+      run: firebase deploy --only hosting --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
 
     - name: GitHub pages Deploy
       run: |
